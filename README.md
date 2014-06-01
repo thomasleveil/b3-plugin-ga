@@ -16,8 +16,8 @@ You need to create a Google Analytics profile and set the GA profile ID accordin
 Installation
 ------------
 
-- copy the `ga` directory into `b3/extplugins`
-- copy `plugin_ga.ini` in the directory where `b3.xml` is in
+- copy the `extplugins/ga` directory into `b3/extplugins`
+- copy `extplugins/conf/plugin_ga.ini` in the directory where `b3.xml` is in
 - edit `plugin_ga.ini` and set your Google Analytics profile id (UA-xxxxxx-x)
 - add to the `plugins` section of your main b3 config file:
 
