@@ -55,6 +55,15 @@ class Test_conf(unittest.TestCase):
         self.p.onStartup()
         self.assertIsNone(self.p._ga_tracking_id)
 
+    def test_bad_tracking_id2(self):
+        self.conf.loadFromString(dedent("""
+            [google analytics]
+            tracking ID: UA-123456-x
+        """))
+        self.p.onLoadConfig()
+        self.p.onStartup()
+        self.assertIsNone(self.p._ga_tracking_id)
+
     def test_nominal(self):
         self.conf.loadFromString(dedent("""
             [google analytics]

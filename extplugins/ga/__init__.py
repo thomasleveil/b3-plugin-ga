@@ -17,11 +17,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 from ConfigParser import NoOptionError
+import re
 from b3.plugin import Plugin
 from .pyga.requests import Tracker
 from .pyga.entities import Page, Session, Visitor
 
-__version__ = '0.1'
+__version__ = '1.0'
 __author__ = 'Courgette'
 
 
@@ -47,10 +48,15 @@ class GaPlugin(Plugin):
         Load plugin configuration
         """
         try:
-            self._ga_tracking_id = self.config.get('google analytics', 'tracking ID')
-            if not self._ga_tracking_id.startswith('UA-'):
-                raise ValueError("Google Analytics tracking ID must start with 'UA-'")
-            self.info('loaded "google analytics/tracking ID": %s' % self._ga_tracking_id)
+            ga_id = self.config.get('google analytics', 'tracking ID')
+            m = re.match(r'^UA-\d+-\d+$', ga_id)
+            if not m:
+                raise ValueError("Invalid Google Analytics tracking ID. %s" % re.sub(r'\d', '*', ga_id))
+            self._ga_tracking_id = ga_id
+            self.info('loaded "google analytics/tracking ID": %s' % re.sub(
+                r'^(UA-\d)(\d+)(\d-\d+)$',
+                lambda m: "%s%s%s" % (m.group(1), '*' * len(m.group(2)), m.group(3)),
+                self._ga_tracking_id))
         except (NoOptionError, ValueError), e:
             self.error('could not load "google analytics/tracking ID". %s' % e)
             self._ga_tracking_id = None
